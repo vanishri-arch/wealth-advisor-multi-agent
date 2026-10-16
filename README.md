@@ -1,76 +1,144 @@
-# Wealth Advisor Assistant — Multi-Agent Demo
+# Wealth Advisor Assistant — Multi-Agent AI
 
-A small, local Python demonstration of a multi-agent workflow for wealth-advisor support. It uses fictional customer and holding data, deterministic mock market context, and SQLite memory. It does not connect to a brokerage, execute trades, or provide personalized regulated financial advice.
+A Python-based demonstration of a multi-agent AI workflow for wealth-advisor support. The project combines customer data retrieval, portfolio analysis, orchestration, persistent conversation memory, and human-in-the-loop review.
 
-## Architecture
+> **Disclaimer:** This is an educational demo using fictional customer data and mock market context. It does not connect to a brokerage, execute trades, or provide personalized financial advice.
 
-- **Orchestrator Agent** coordinates retrieval, analysis, summary generation, memory writes, and the human-review gate.
-- **Data Fetcher Agent** retrieves a fictional customer profile and holdings from the mock CRM and gets illustrative market context.
-- **Analyzer Agent** calculates portfolio value, cost, unrealized gain/loss, asset-class allocation, and largest holding concentrations.
-- **Mock tools** keep the demo runnable without API keys. Replace these adapters only after selecting and authorizing real data sources.
-- **SQLite memory** stores session messages and historical summaries locally.
-- **Human review** is always required. The output is for advisor discussion; the application never trades or performs external actions.
+## Project Overview
+
+The application coordinates specialized components to produce a portfolio summary for advisor review.
+
+### Architecture
+
+- **Orchestrator Agent:** Coordinates data retrieval, analysis, summary generation, memory updates, and the human-review gate.
+- **Data Fetcher Agent:** Retrieves fictional customer profiles and holdings through mock CRM tools and illustrative market context.
+- **Analyzer Agent:** Calculates portfolio value, cost basis, unrealized gain or loss, asset-class allocation, and holding concentrations.
+- **SQLite Conversation Memory:** Persists session messages and historical advisor summaries locally.
+- **Human-in-the-Loop Review:** Keeps advisor review in the workflow. Generated summaries are not treated as approved financial recommendations.
+- **Mock Tools:** Allow the application to run without paid API keys or external service connections.
+
+## Key Features
+
+- Multiple specialized components coordinated through an orchestrator.
+- Portfolio calculations and asset-allocation analysis.
+- Customer-specific demo scenarios.
+- Persistent SQLite storage for conversation history and summaries.
+- Human-review status included in generated summaries.
+- Automated tests for core calculations, customer retrieval, history persistence, and error handling.
+- Local execution without external API credentials.
+
+## Technology Stack
+
+- Python
+- SQLite
+- Standard-library database and data-handling tools
+- `unittest` for automated testing
+- `pytest` (optional)
+
+## Project Structure
+
+```text
+wealth-advisor-multi-agent/
+├── app/
+│   ├── agents/
+│   │   ├── analyzer.py
+│   │   └── data_fetcher.py
+│   ├── memory/
+│   │   └── conversation_store.py
+│   ├── models/
+│   │   └── schemas.py
+│   ├── tools/
+│   │   ├── crm_tools.py
+│   │   └── market_tools.py
+│   ├── main.py
+│   └── orchestrator.py
+├── data/
+├── tests/
+│   └── test_wealth_advisor.py
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
 
 ## Requirements
 
 - Python 3.10 or newer
-- No paid API key or network access required
-- Optional: `pytest` for test execution
+- No paid API key required
+- No external network connection required for the demo
 
-## Run
+## Getting Started
 
-From this project directory:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/vanishri-arch/wealth-advisor-multi-agent.git
+cd wealth-advisor-multi-agent
+```
+
+### 2. Run the application
+
+Run the default demo customer:
 
 ```bash
 python -m app.main
+```
+
+Run a specific demo customer:
+
+```bash
+python -m app.main --customer CUST-101
+```
+
+```bash
 python -m app.main --customer CUST-202
-python -m app.main --db ./data/demo.db --customer CUST-101
+```
+
+### 3. View saved history
+
+```bash
 python -m app.main --history --customer CUST-101
 ```
 
-The first run creates a local SQLite database. The default database is `wealth_advisor_memory.db` and is ignored by Git.
+The application stores local conversation and summary history in SQLite. The default database file is excluded from Git through `.gitignore`.
 
-## Tests
+## Running Tests
+
+Run the test suite using Python's built-in test runner:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Or install the optional test dependency and run:
+Alternatively, install the optional test dependency and use `pytest`:
 
 ```bash
 python -m pip install -r requirements.txt
-pytest -q
+python -m pytest -v
 ```
 
-## Example workflow
+## Current Limitations
 
-1. The orchestrator receives a demo customer ID.
-2. The data-fetcher retrieves the profile, holdings, and mock market context.
-3. The analyzer calculates metrics and flags large concentrations for review.
-4. The orchestrator builds a summary, labels demo assumptions, and saves the interaction and summary in SQLite.
-5. The result clearly states that human review is required.
+- Customer profiles, holdings, and market context are illustrative and use mock data.
+- The application is a demonstration, not a production financial-advisory system.
+- No live brokerage, market-data provider, CRM, or external AI API is connected.
+- Portfolio outputs require human review and should not be interpreted as personalized financial advice.
+- Production deployment would require authorized data integrations, security controls, audit logging, monitoring, and additional validation.
 
-## Sample customers
+## Future Improvements
 
-- `CUST-101`: moderate risk tolerance, retirement and moderate growth goal.
-- `CUST-202`: aggressive risk tolerance, long-term accumulation goal.
+- Add an authorized live market-data integration.
+- Integrate a real CRM through approved APIs.
+- Add configurable risk and portfolio-analysis rules.
+- Expand automated tests and evaluation scenarios.
+- Introduce authentication, access controls, and audit trails for production readiness.
 
-All names, prices, quantities, and market values are fictional illustrative data. Metrics are arithmetic summaries of the supplied sample holdings, not verified live valuations.
+## Author
 
-## Limitations and next steps
+**Vanishri**
 
-- Market data and CRM records are mock implementations.
-- No LLM is required; agent behavior is deterministic so tests are reproducible.
-- Before real use, add authentication, authorization, consent, audit controls, data-quality checks, secure secret handling, and compliance review. Integrate only approved APIs and have a qualified advisor review any client-facing output.
-- Consider adding schema-based API adapters, portfolio benchmark comparison, richer risk metrics, and a UI after the core workflow is reviewed.
+GitHub: [@vanishri-arch](https://github.com/vanishri-arch)
 
-## GitHub preparation
+---
 
-```bash
-git init
-git add .
-git commit -m "Build wealth advisor multi-agent demo"
-```
-
-Review the files before pushing. Never commit credentials, real client information, or local database files.
+*Built as a practical demonstration of multi-agent orchestration, portfolio analysis, persistent memory, and human-in-the-loop workflow design.*
